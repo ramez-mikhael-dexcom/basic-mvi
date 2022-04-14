@@ -6,19 +6,33 @@ import com.ramezmikhael.mvibasicexample.model.MessageViewState
 class Reducer {
     fun reducer(currentState: MessageViewState, action: MessageAction): MessageViewState {
         return when (action) {
-            is MessageAction.Error -> TODO()
+            is MessageAction.Error -> buildStateWhenError(currentState, action)
             is MessageAction.MessageTextChanged -> buildStateWhenTextChanged(currentState, action)
             MessageAction.SendClicked -> buildStateWhenSendClicked(currentState)
             MessageAction.SendFinished -> buildStateWhenSendFinished(currentState)
         }
     }
 
+    private fun buildStateWhenError(
+        currentState: MessageViewState,
+        action: MessageAction.Error
+    ): MessageViewState {
+        return currentState.copy(
+            errorMessageVisible = true,
+            errorMessage = action.errorMessage,
+            sendButtonEnabled = true,
+            progressBarVisible = false
+        )
+    }
+
     private fun buildStateWhenSendFinished(currentState: MessageViewState): MessageViewState {
-        return currentState.copy(message = "",
-        errorMessage = "",
-        errorMessageVisible = false,
-        progressBarVisible = false,
-        sendButtonEnabled = false)
+        return currentState.copy(
+            message = "",
+            errorMessage = "",
+            errorMessageVisible = false,
+            progressBarVisible = false,
+            sendButtonEnabled = false
+        )
     }
 
     private fun buildStateWhenSendClicked(currentState: MessageViewState): MessageViewState {
